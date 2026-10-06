@@ -1,126 +1,77 @@
-export const mockCoins = [
-  {
-    symbol: 'BTCUSDT',
-    lastPrice: 64280.15,
-    price24hPcnt: 2.84,
-    volume24h: 4815000000,
-    turnover24h: 164900000000,
-    signal: 'Breakout',
-    score: 84.5,
-    volatility: 1.24,
-    stopLoss: 61066.14,
-    takeProfit1: 67494.16,
-    takeProfit2: 70708.17,
-  },
-  {
-    symbol: 'ETHUSDT',
-    lastPrice: 3520.48,
-    price24hPcnt: 1.96,
-    volume24h: 3320000000,
-    turnover24h: 122400000000,
-    signal: 'Bullish',
-    score: 71.2,
-    volatility: 1.1,
-    stopLoss: 3344.46,
-    takeProfit1: 3696.50,
-    takeProfit2: 3872.53,
-  },
-  {
-    symbol: 'SOLUSDT',
-    lastPrice: 156.23,
-    price24hPcnt: 4.52,
-    volume24h: 1890000000,
-    turnover24h: 98000000000,
-    signal: 'Breakout',
-    score: 69.9,
-    volatility: 2.8,
-    stopLoss: 148.42,
-    takeProfit1: 163.44,
-    takeProfit2: 171.85,
-  },
-  {
-    symbol: 'BNBUSDT',
-    lastPrice: 612.7,
-    price24hPcnt: 1.35,
-    volume24h: 820000000,
-    turnover24h: 42000000000,
-    signal: 'Bullish',
-    score: 58.4,
-    volatility: 1.6,
-    stopLoss: 581.07,
-    takeProfit1: 643.35,
-    takeProfit2: 674.00,
-  },
-  {
-    symbol: 'XRPUSDT',
-    lastPrice: 0.6125,
-    price24hPcnt: 3.2,
-    volume24h: 980000000,
-    turnover24h: 52000000000,
-    signal: 'Bullish',
-    score: 55.8,
-    volatility: 3.4,
-    stopLoss: 0.5819,
-    takeProfit1: 0.6431,
-    takeProfit2: 0.6738,
-  },
-  {
-    symbol: 'AVAXUSDT',
-    lastPrice: 34.61,
-    price24hPcnt: -0.75,
-    volume24h: 460000000,
-    turnover24h: 18000000000,
-    signal: 'Neutral',
-    score: 41.1,
-    volatility: 2.1,
-    stopLoss: 32.88,
-    takeProfit1: 36.34,
-    takeProfit2: 38.07,
-  },
-  {
-    symbol: 'DOGEUSDT',
-    lastPrice: 0.1748,
-    price24hPcnt: 2.43,
-    volume24h: 760000000,
-    turnover24h: 34000000000,
-    signal: 'Bullish',
-    score: 49.6,
-    volatility: 2.9,
-    stopLoss: 0.1661,
-    takeProfit1: 0.1835,
-    takeProfit2: 0.1923,
-  },
-  {
-    symbol: 'LINKUSDT',
-    lastPrice: 17.21,
-    price24hPcnt: 1.11,
-    volume24h: 390000000,
-    turnover24h: 12200000000,
-    signal: 'Neutral',
-    score: 36.9,
-    volatility: 1.7,
-    stopLoss: 16.35,
-    takeProfit1: 18.08,
-    takeProfit2: 18.93,
-  },
-];
+import { useEffect, useMemo, useState } from 'react';
+import ChartView from './components/ChartView';
+import CoinTable from './components/CoinTable';
+import StrategyCards from './components/StrategyCards';
+import StatsGrid from './components/StatsGrid';
+import { mockCoins } from './mockData';
 
-export const buildMockChart = (symbol) => {
-  const basePrice = symbol.includes('BTC') ? 64280 : symbol.includes('ETH') ? 3520 : symbol.includes('SOL') ? 156 : 50;
-  const points = [];
-  let price = basePrice * 0.92;
+function App() {
+  const [coins, setCoins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+  const [selectedCoin, setSelectedCoin] = useState(null);
 
-  for (let i = 0; i < 36; i++) {
-    price = price * (1 + (Math.sin(i / 4) * 0.02) + (Math.random() - 0.5) * 0.015);
-    points.push({
-      time: `T-${35 - i}`,
-      close: Number(price.toFixed(4)),
-      open: Number((price * (1 + (Math.random() - 0.5) * 0.01)).toFixed(4)),
-      high: Number((price * (1 + (Math.random() * 0.02))).toFixed(4)),
-      low: Number((price * (1 - (Math.random() * 0.02))).toFixed(4)),
-      volume: Number((Math.random() * 2000000 + 500000).toFixed(0)),
-    });
-  }
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        setCoins(mockCoins);
+        setError('');
+      } catch (err) {
+        setError('Unable to load recommendations');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  return points;
-};
+    load();
+  }, []);
+
+  const filteredCoins = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return coins;
+    return coins.filter((coin) => coin.symbol.toLowerCase().includes(normalized));
+  }, [coins, query]);
+
+  const topCoins = filteredCoins.slice(0, 3);
+  const averageScore = filteredCoins.length
+    ? filteredCoins.reduce((sum, coin) => sum + coin.score, 0) / filteredCoins.length
+    : 0;
+  const bullishCount = filteredCoins.filter((coin) => coin.signal === 'Bullish' || coin.signal === 'Breakout').length;
+
+  return (
+    <div className="app-shell">
+      <header className="topbar">
+        <div>
+          <p className="eyebrow">Bybit Intelligence</p>
+          <h1>Crypto Trading Strategy Dashboard</h1>
+        </div>
+        <div className="toolbar">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter symbol..."
+            aria-label="Filter symbol"
+          />
+        </div>
+      </header>
+
+      {error && <div className="alert error">{error}</div>}
+
+      <StatsGrid coins={filteredCoins} topCoins={topCoins} averageScore={averageScore} bullishCount={bullishCount} />
+
+      {!loading && <StrategyCards coins={topCoins} onSelectCoin={setSelectedCoin} />}
+
+      {selectedCoin && <ChartView symbol={selectedCoin} onClose={() => setSelectedCoin(null)} />}
+
+      {loading ? (
+        <div className="loading">Loading Bybit market data...</div>
+      ) : (
+        <CoinTable coins={filteredCoins} onSelectCoin={setSelectedCoin} />
+      )}
+    </div>
+  );
+}
+
+export default App;
