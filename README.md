@@ -1,2 +1,11 @@
-# bybit-coin-recommendation
-Advanced Bybit coin recommendation engine with technical analysis scoring
+# Node
+node_modules/
+dist/
+.vite/
+.env
+
+# Logs
+npm-debug.log*
+
+# OS
+.DS_Store

@@ -1,0 +1,86 @@
+import express from 'express';
+import cors from 'cors';
+import axios from 'axios';
+
+const app = express();
+const port = 3001;
+
+app.use(cors());
+app.use(express.json());
+
+const BYBIT_ENDPOINT = 'https://api.bybit.com/v5/market/tickers';
+
+function scoreCoin(item) {
+  const lastPrice = Number(item.lastPrice || 0);
+  const priceChange = Number(item.price24hPcnt || 0);
+  const volume24h = Number(item.volume24h || 0);
+  const turnover24h = Number(item.turnover24h || 0);
+  const high = Number(item.highPrice24h || lastPrice);
+  const low = Number(item.lowPrice24h || lastPrice);
+
+  const volatility = low > 0 ? (high - low) / low : 0;
+  const volumeWeight = Math.log1p(volume24h || 1) * 0.8;
+  const trendScore = priceChange * 3.5;
+  const turnoverScore = turnover24h > 0 ? Math.log10(turnover24h + 1) * 1.2 : 0;
+  const riskPenalty = volatility * 200;
+
+  const score = trendScore + volumeWeight + turnoverScore - riskPenalty;
+
+  if (score >= 12) return { signal: 'Breakout', score: Math.max(0, score) };
+  if (score >= 6) return { signal: 'Bullish', score: Math.max(0, score) };
+  if (score > -2) return { signal: 'Neutral', score: Math.max(0, score) };
+  return { signal: 'Risky', score: Math.max(0, score) };
+}
+
+async function fetchBybitTickers(category = 'spot') {
+  const response = await axios.get(BYBIT_ENDPOINT, {
+    params: { category },
+    timeout: 20000,
+  });
+
+  if (response.data?.retCode !== 0) {
+    throw new Error(response.data?.retMsg || 'Bybit API request failed');
+  }
+
+  return response.data?.result?.list || [];
+}
+
+app.get('/api/recommendations', async (req, res) => {
+  try {
+    const limit = Math.min(Number(req.query.limit || 10), 30);
+    const spot = await fetchBybitTickers('spot');
+    const linear = await fetchBybitTickers('linear');
+
+    const pool = [...spot, ...linear]
+      .filter((entry) => {
+        const symbol = entry?.symbol || '';
+        return symbol.toUpperCase().endsWith('USDT') || symbol.toUpperCase().endsWith('USDC');
+      })
+      .map((entry) => {
+        const { signal, score } = scoreCoin(entry);
+        return {
+          symbol: entry.symbol,
+          lastPrice: Number(entry.lastPrice || 0),
+          price24hPcnt: Number(entry.price24hPcnt || 0),
+          volume24h: Number(entry.volume24h || 0),
+          turnover24h: Number(entry.turnover24h || 0),
+          signal,
+          score: Number(score.toFixed(2)),
+        };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    res.json({ count: pool.length, coins: pool.slice(0, limit) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message || 'Internal server error' });
+  }
+});
+
+app.get('/api/health', (_req, res) => {
+  res.json({ ok: true, service: 'bybit-ai-screen' });
+});
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
