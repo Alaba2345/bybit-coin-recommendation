@@ -2,9 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import NodeCache from 'node-cache';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 const cache = new NodeCache({ stdTTL: 60, checkperiod: 30 });
 
 app.use(cors());
@@ -308,7 +313,17 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, service: 'bybit-ai-screen', cacheSize: cache.keys().length });
 });
 
+// Serve static files from dist folder (React build)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+}
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
   console.log(`Cache initialized with 60s TTL`);
 });
+
+export default app;
