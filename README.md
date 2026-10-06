@@ -2,6 +2,8 @@
 
 Advanced cryptocurrency trading recommendation system with real-time technical analysis, RSI/MACD indicators, buy/sell signals, and interactive chart view.
 
+**Live Demo**: Coming soon after Vercel deployment
+
 ## Features
 
 ### 1. Real-Time Market Data
@@ -38,13 +40,15 @@ Advanced cryptocurrency trading recommendation system with real-time technical a
 - Concurrent coin + chart loading
 - Minimal API calls
 
-## Installation
+## Local Installation
 
 ```bash
+git clone https://github.com/Alaba2345/bybit-coin-recommendation.git
+cd bybit-coin-recommendation
 npm install
 ```
 
-## Running
+## Running Locally
 
 ```bash
 npm run dev
@@ -53,6 +57,28 @@ npm run dev
 Then open:
 - Dashboard: http://localhost:5173
 - API: http://localhost:3001/api/recommendations
+
+## Deployment to Vercel
+
+### Quick Deploy Button (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Alaba2345/bybit-coin-recommendation)
+
+### Manual Deployment
+
+1. **Install Vercel CLI**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Deploy**
+   ```bash
+   vercel
+   ```
+
+3. **Follow prompts** and select your GitHub account
+
+4. **Your live app** will be available at `https://bybit-coin-recommendation.vercel.app`
 
 ## API Endpoints
 
@@ -100,6 +126,17 @@ Fetch chart data and technical indicators for a specific coin.
 }
 ```
 
+### GET /api/health
+Health check endpoint.
+
+```json
+{
+  "ok": true,
+  "service": "bybit-ai-screen",
+  "cacheSize": 12
+}
+```
+
 ## Scoring Algorithm
 
 The recommendation score combines multiple factors:
@@ -136,6 +173,11 @@ The recommendation score combines multiple factors:
 - **Backend**: Express, Axios, Node-cache
 - **Data**: Bybit REST API v5
 - **Styling**: Custom CSS with dark theme
+- **Hosting**: Vercel
+
+## Important Notes
+
+⚠️ **Disclaimer**: This tool is for educational and analysis purposes only. It does not provide financial advice. Always conduct your own research and risk assessment before trading.
 
 ## License
 
