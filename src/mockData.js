@@ -1,278 +1,70 @@
-export const mockCoins = [
-  {
-    symbol: 'BTCUSDT',
-    lastPrice: 64280.15,
-    price24hPcnt: 2.84,
-    volume24h: 4815000000,
-    turnover24h: 164900000000,
-    signal: 'Breakout',
-    score: 84.5,
-    volatility: 1.24,
-    stopLoss: 61066.14,
-    takeProfit1: 67494.16,
-    takeProfit2: 70708.17,
-  },
-  {
-    symbol: 'ETHUSDT',
-    lastPrice: 3520.48,
-    price24hPcnt: 1.96,
-    volume24h: 3320000000,
-    turnover24h: 122400000000,
-    signal: 'Bullish',
-    score: 71.2,
-    volatility: 1.1,
-    stopLoss: 3344.46,
-    takeProfit1: 3696.50,
-    takeProfit2: 3872.53,
-  },
-  {
-    symbol: 'SOLUSDT',
-    lastPrice: 156.23,
-    price24hPcnt: 4.52,
-    volume24h: 1890000000,
-    turnover24h: 98000000000,
-    signal: 'Breakout',
-    score: 69.9,
-    volatility: 2.8,
-    stopLoss: 148.42,
-    takeProfit1: 163.44,
-    takeProfit2: 171.85,
-  },
-  {
-    symbol: 'BNBUSDT',
-    lastPrice: 612.7,
-    price24hPcnt: 1.35,
-    volume24h: 820000000,
-    turnover24h: 42000000000,
-    signal: 'Bullish',
-    score: 58.4,
-    volatility: 1.6,
-    stopLoss: 581.07,
-    takeProfit1: 643.35,
-    takeProfit2: 674.00,
-  },
-  {
-    symbol: 'XRPUSDT',
-    lastPrice: 0.6125,
-    price24hPcnt: 3.2,
-    volume24h: 980000000,
-    turnover24h: 52000000000,
-    signal: 'Bullish',
-    score: 55.8,
-    volatility: 3.4,
-    stopLoss: 0.5819,
-    takeProfit1: 0.6431,
-    takeProfit2: 0.6738,
-  },
-  {
-    symbol: 'AVAXUSDT',
-    lastPrice: 34.61,
-    price24hPcnt: -0.75,
-    volume24h: 460000000,
-    turnover24h: 18000000000,
-    signal: 'Neutral',
-    score: 41.1,
-    volatility: 2.1,
-    stopLoss: 32.88,
-    takeProfit1: 36.34,
-    takeProfit2: 38.07,
-  },
-  {
-    symbol: 'DOGEUSDT',
-    lastPrice: 0.1748,
-    price24hPcnt: 2.43,
-    volume24h: 760000000,
-    turnover24h: 34000000000,
-    signal: 'Bullish',
-    score: 49.6,
-    volatility: 2.9,
-    stopLoss: 0.1661,
-    takeProfit1: 0.1835,
-    takeProfit2: 0.1923,
-  },
-  {
-    symbol: 'LINKUSDT',
-    lastPrice: 17.21,
-    price24hPcnt: 1.11,
-    volume24h: 390000000,
-    turnover24h: 12200000000,
-    signal: 'Neutral',
-    score: 36.9,
-    volatility: 1.7,
-    stopLoss: 16.35,
-    takeProfit1: 18.08,
-    takeProfit2: 18.93,
-  },
-  {
-    symbol: 'ADAUSDT',
-    lastPrice: 1.0842,
-    price24hPcnt: 1.67,
-    volume24h: 650000000,
-    turnover24h: 28500000000,
-    signal: 'Bullish',
-    score: 52.3,
-    volatility: 2.15,
-    stopLoss: 1.0301,
-    takeProfit1: 1.1383,
-    takeProfit2: 1.1925,
-  },
-  {
-    symbol: 'POLYUSDT',
-    lastPrice: 0.9284,
-    price24hPcnt: 3.91,
-    volume24h: 520000000,
-    turnover24h: 24200000000,
-    signal: 'Breakout',
-    score: 65.7,
-    volatility: 3.2,
-    stopLoss: 0.8830,
-    takeProfit1: 0.9748,
-    takeProfit2: 1.0212,
-  },
-  {
-    symbol: 'MATICUSDT',
-    lastPrice: 0.5934,
-    price24hPcnt: 2.18,
-    volume24h: 480000000,
-    turnover24h: 18900000000,
-    signal: 'Bullish',
-    score: 48.9,
-    volatility: 2.45,
-    stopLoss: 0.5639,
-    takeProfit1: 0.6231,
-    takeProfit2: 0.6527,
-  },
-  {
-    symbol: 'PEPEUSDT',
-    lastPrice: 0.00000892,
-    price24hPcnt: 5.34,
-    volume24h: 340000000,
-    turnover24h: 8900000000,
-    signal: 'Breakout',
-    score: 62.1,
-    volatility: 4.8,
-    stopLoss: 0.00000832,
-    takeProfit1: 0.00000936,
-    takeProfit2: 0.00000981,
-  },
-  {
-    symbol: 'LITUSDT',
-    lastPrice: 98.45,
-    price24hPcnt: 1.23,
-    volume24h: 290000000,
-    turnover24h: 14100000000,
-    signal: 'Neutral',
-    score: 43.2,
-    volatility: 1.9,
-    stopLoss: 93.54,
-    takeProfit1: 103.39,
-    takeProfit2: 108.35,
-  },
-  {
-    symbol: 'DOTUSDT',
-    lastPrice: 7.891,
-    price24hPcnt: 2.67,
-    volume24h: 380000000,
-    turnover24h: 16700000000,
-    signal: 'Bullish',
-    score: 54.6,
-    volatility: 2.34,
-    stopLoss: 7.493,
-    takeProfit1: 8.285,
-    takeProfit2: 8.682,
-  },
-  {
-    symbol: 'UNIUSDT',
-    lastPrice: 11.34,
-    price24hPcnt: 1.89,
-    volume24h: 420000000,
-    turnover24h: 19200000000,
-    signal: 'Bullish',
-    score: 51.4,
-    volatility: 2.11,
-    stopLoss: 10.77,
-    takeProfit1: 11.91,
-    takeProfit2: 12.49,
-  },
-  {
-    symbol: 'SHIBUSDT',
-    lastPrice: 0.00002145,
-    price24hPcnt: 3.56,
-    volume24h: 510000000,
-    turnover24h: 22100000000,
-    signal: 'Bullish',
-    score: 57.8,
-    volatility: 3.67,
-    stopLoss: 0.00002038,
-    takeProfit1: 0.00002252,
-    takeProfit2: 0.00002359,
-  },
-  {
-    symbol: 'OPUSDT',
-    lastPrice: 2.734,
-    price24hPcnt: 2.41,
-    volume24h: 270000000,
-    turnover24h: 9800000000,
-    signal: 'Bullish',
-    score: 49.1,
-    volatility: 2.56,
-    stopLoss: 2.597,
-    takeProfit1: 2.870,
-    takeProfit2: 3.007,
-  },
-  {
-    symbol: 'ARBUSDT',
-    lastPrice: 1.1892,
-    price24hPcnt: 2.94,
-    volume24h: 350000000,
-    turnover24h: 13500000000,
-    signal: 'Breakout',
-    score: 63.2,
-    volatility: 2.78,
-    stopLoss: 1.1286,
-    takeProfit1: 1.2492,
-    takeProfit2: 1.3093,
-  },
-  {
-    symbol: 'MKRUSDT',
-    lastPrice: 2841.56,
-    price24hPcnt: 1.56,
-    volume24h: 195000000,
-    turnover24h: 7200000000,
-    signal: 'Neutral',
-    score: 45.7,
-    volatility: 1.83,
-    stopLoss: 2699.49,
-    takeProfit1: 2984.64,
-    takeProfit2: 3125.73,
-  },
-  {
-    symbol: 'AAVEUSDT',
-    lastPrice: 234.89,
-    price24hPcnt: 2.12,
-    volume24h: 310000000,
-    turnover24h: 11500000000,
-    signal: 'Bullish',
-    score: 53.5,
-    volatility: 2.05,
-    stopLoss: 223.24,
-    takeProfit1: 246.64,
-    takeProfit2: 258.38,
-  },
-  {
-    symbol: 'CRVUSDT',
-    lastPrice: 0.4567,
-    price24hPcnt: 1.78,
-    volume24h: 180000000,
-    turnover24h: 6200000000,
-    signal: 'Neutral',
-    score: 40.3,
-    volatility: 2.34,
-    stopLoss: 0.4339,
-    takeProfit1: 0.4795,
-    takeProfit2: 0.5023,
-  },
+const bybitAssetUniverse = [
+  'BTC','ETH','SOL','BNB','XRP','ADA','DOGE','LINK','DOT','AVAX','MATIC','LTC','UNI','ATOM','NEAR','APT','ARB','OP','ALGO','FIL','TIA','SUI','RNDR','PEPE','FET','BONK','INJ','SEI','NEAR','FLOW','IMX','GRT','EOS','ONT','XTZ','KAVA','TRX','ICP','ETC','EGLD','WAVES','SAND','MANA','AAVE','COMP','YFI','SNX','THETA','HBAR','VET','CHZ','ENJ','RUNE','KSM','FTM','CELR','ZIL','ONE','PYR','IOTX','NEXO','BCH','XLM','USDC','USDT','BUSD','TUSD','DAI','BTC','ETH','SOL','MATIC','LINK','ADA','DOT','XRP','UNI','SUSHI','JUP','MAGIC','MASK','WIF','PENDLE','FLUX','AKT','JASMY','BLUR','PAXG','XNO','GALA','FLOKI','WLD','ORDI','GAS','VOXEL','BTT','CRO','BGB','GMT','GTC','LDO','JTO','ZRO','AZERO','KNC','RSR','DENT','SKL','ACH','REEF','MAV','SXP','DASH','ZEC','NMR','KAS','CSPR','HNT','BORA','EVMOS','XDC','DAO','CTK','MINA','NTRN','PRQ','LUNC','APE','WOO','GNO','BANC','CVX','FXS','STX','MUBI','HIFI','USDP','ILV','LOKA','NCT','POLS','RONIN','KLAY','UOS','ERN','BRC20','PORTAL','OGN','SFRX','DYM','PHB','ID','MANTA','BAN','REQ','MEV','STG','AUDIO','TVK','ARK','BICO','RLB','BNT','ZEN','LQTY','MBOX','GAS','KAI','C98','XPR','BOND','BTRST','LRC','SYN','YGG','AMP','ZETA','OCEAN','DUSK','GODS','RAY','GLMR','MNGO','PING','TWT','RPL','RIF','XAUT','BLOK','ZRX','CVC','BAL','UMA','BADGER','STRK','STETH','AGIX','RLC','TORN','POLS'],
+  'USDT'
 ];
+
+const clampToPrice = (value, min, max) => Math.min(Math.max(value, min), max);
+
+const buildSeed = (symbol) => {
+  const base = symbol.replace('USDT', '').replace('USD', '');
+  let hash = 0;
+  for (let i = 0; i < base.length; i++) {
+    hash = (hash * 31 + base.charCodeAt(i)) >>> 0;
+  }
+  return hash;
+};
+
+const createMockCoin = (symbol, index) => {
+  const seed = buildSeed(symbol);
+  const basePrice = (() => {
+    if (symbol.includes('BTC')) return 62000 + (seed % 8000);
+    if (symbol.includes('ETH')) return 3200 + (seed % 1500);
+    if (symbol.includes('SOL')) return 120 + (seed % 160);
+    if (symbol.includes('BNB')) return 550 + (seed % 200);
+    if (symbol.includes('XRP')) return 0.52 + (seed % 0.8);
+    if (symbol.includes('DOGE')) return 0.15 + (seed % 0.3);
+    if (symbol.includes('ADA')) return 0.7 + (seed % 1.2);
+    if (symbol.includes('LINK')) return 14 + (seed % 25);
+    if (symbol.includes('MATIC')) return 0.48 + (seed % 1.1);
+    if (symbol.includes('DOT')) return 6 + (seed % 12);
+    if (symbol.includes('UNI')) return 9 + (seed % 18);
+    return 0.5 + ((seed % 1000) / 10);
+  })();
+
+  const lastPrice = Number(basePrice.toFixed(6));
+  const price24hPcnt = Number((((seed % 80) - 30) / 10).toFixed(2));
+  const volume24h = ((seed % 950000000) + 120000000) * (index % 7 + 1);
+  const turnover24h = Number((volume24h * lastPrice * 1.3).toFixed(2));
+
+  const signalPool = ['Bullish', 'Breakout', 'Neutral', 'Risky'];
+  const signal = signalPool[seed % signalPool.length];
+  const score = clampToPrice(30 + (seed % 60), 28, 96);
+  const volatility = Number((0.8 + ((seed % 60) / 25)).toFixed(2));
+
+  const stopLoss = Number((lastPrice * (1 - 0.12 - ((seed % 20) / 1000))).toFixed(6));
+  const takeProfit1 = Number((lastPrice * (1 + 0.08 + ((seed % 30) / 1000))).toFixed(6));
+  const takeProfit2 = Number((lastPrice * (1 + 0.18 + ((seed % 45) / 1000))).toFixed(6));
+
+  return {
+    symbol,
+    lastPrice,
+    price24hPcnt,
+    volume24h,
+    turnover24h,
+    signal,
+    score: Number(score.toFixed(1)),
+    volatility,
+    stopLoss,
+    takeProfit1,
+    takeProfit2,
+  };
+};
+
+export const mockCoins = bybitAssetUniverse
+  .map((asset, index) => `${asset}USDT`)
+  .filter((symbol, index, arr) => arr.indexOf(symbol) === index)
+  .slice(0, 250)
+  .map((symbol, index) => createMockCoin(symbol, index));
 
 export const buildMockChart = (symbol) => {
   const basePrice = symbol.includes('BTC') ? 64280 : symbol.includes('ETH') ? 3520 : symbol.includes('SOL') ? 156 : 50;
