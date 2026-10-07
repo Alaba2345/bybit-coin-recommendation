@@ -3,7 +3,7 @@ import ChartView from './components/ChartView';
 import CoinTable from './components/CoinTable';
 import StrategyCards from './components/StrategyCards';
 import StatsGrid from './components/StatsGrid';
-import { mockCoins, sortCoins, filterCoins, paginateCoins } from './mockData';
+import { getLiveCoins, getTopRecommendations, sortCoins, filterCoins, paginateCoins } from './mockData';
 
 function App() {
   const [coins, setCoins] = useState([]);
@@ -11,6 +11,9 @@ function App() {
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [selectedCoin, setSelectedCoin] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [refreshInterval, setRefreshInterval] = useState(1000); // 1 second default
   
   // Pagination & Sorting
   const [page, setPage] = useState(1);
@@ -29,21 +32,25 @@ function App() {
     minScore: null,
   });
 
+  // Auto-refresh live data
   useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        setCoins(mockCoins);
-        setError('');
-      } catch (err) {
-        setError('Unable to load recommendations');
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!autoRefresh) return;
 
-    load();
-  }, []);
+    const interval = setInterval(() => {
+      const liveCoins = getLiveCoins();
+      setCoins(liveCoins);
+      setLastUpdate(new Date());
+      setLoading(false);
+    }, refreshInterval);
+
+    // Initial load
+    const liveCoins = getLiveCoins();
+    setCoins(liveCoins);
+    setLastUpdate(new Date());
+    setLoading(false);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, refreshInterval]);
 
   // Apply search filter
   const searchFiltered = useMemo(() => {
@@ -61,6 +68,11 @@ function App() {
   const sorted = useMemo(() => {
     return sortCoins(advancedFiltered, sortBy);
   }, [advancedFiltered, sortBy]);
+
+  // Get auto-recommended coins (top 5)
+  const autoRecommended = useMemo(() => {
+    return getTopRecommendations(coins, 5);
+  }, [coins]);
 
   // Apply pagination
   const paginated = useMemo(() => {
@@ -82,12 +94,19 @@ function App() {
     handleResetPage();
   };
 
+  const formatTime = (date) => {
+    return date.toLocaleTimeString();
+  };
+
   return (
     <div className="app-shell">
       <header className="topbar">
         <div>
-          <p className="eyebrow">Bybit Intelligence</p>
-          <h1>Crypto Trading Strategy Dashboard</h1>
+          <p className="eyebrow">⚡ Bybit Live Intelligence</p>
+          <h1>Real-Time Crypto Trading Dashboard</h1>
+          <small style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '4px' }}>
+            Auto-updating • Last refresh: {formatTime(lastUpdate)}
+          </small>
         </div>
         <div className="toolbar">
           <input
@@ -111,12 +130,109 @@ function App() {
             <option value={50}>50 per page</option>
             <option value={100}>100 per page</option>
           </select>
+          <select
+            value={refreshInterval}
+            onChange={(e) => setRefreshInterval(Number(e.target.value))}
+            className="filter-select"
+            title="Auto-refresh interval"
+          >
+            <option value={500}>Refresh 2x/sec</option>
+            <option value={1000}>Refresh 1x/sec</option>
+            <option value={2000}>Refresh 0.5x/sec</option>
+            <option value={5000}>Refresh 5 sec</option>
+          </select>
+          <button
+            onClick={() => setAutoRefresh(!autoRefresh)}
+            style={{
+              padding: '12px 16px',
+              background: autoRefresh ? 'rgba(52, 211, 153, 0.2)' : 'rgba(248, 113, 113, 0.2)',
+              border: `1px solid ${autoRefresh ? '#34d399' : '#f87171'}`,
+              color: autoRefresh ? '#34d399' : '#f87171',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              transition: 'all 0.2s',
+            }}
+            title="Toggle auto-refresh"
+          >
+            {autoRefresh ? '🟢 LIVE' : '🔴 PAUSED'}
+          </button>
         </div>
       </header>
 
       {error && <div className="alert error">{error}</div>}
 
       <StatsGrid coins={sorted} topCoins={topCoins} averageScore={averageScore} bullishCount={bullishCount} />
+
+      {/* Auto-Recommended Section */}
+      <section style={{
+        background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(34, 197, 94, 0.08))',
+        border: '2px solid rgba(52, 211, 153, 0.3)',
+        borderRadius: '18px',
+        padding: '24px',
+        marginBottom: '24px',
+      }}>
+        <h2 style={{ margin: '0 0 16px', color: '#34d399', fontSize: '1.3rem' }}>🎯 Auto-Detected Recommendations</h2>
+        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', marginBottom: '16px' }}>
+          These coins are automatically detected as having the strongest signals right now
+        </p>
+        {autoRecommended.length > 0 ? (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '14px',
+          }}>
+            {autoRecommended.map((coin, index) => (
+              <div key={coin.symbol} style={{
+                background: 'rgba(15, 23, 42, 0.8)',
+                border: '1px solid rgba(52, 211, 153, 0.3)',
+                borderRadius: '12px',
+                padding: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                hover: { borderColor: 'rgba(52, 211, 153, 0.6)' },
+              }} onClick={() => setSelectedCoin(coin.symbol)}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <strong style={{ color: '#34d399', fontSize: '1.1rem' }}>#{index + 1}</strong>
+                  <span style={{
+                    background: 'rgba(52, 211, 153, 0.2)',
+                    color: '#34d399',
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                  }}>
+                    {coin.signal}
+                  </span>
+                </div>
+                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--text)', marginBottom: '8px' }}>
+                  {coin.symbol}
+                </div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--muted)', marginBottom: '6px' }}>
+                  ${coin.lastPrice.toFixed(6)}
+                </div>
+                <div style={{
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  color: coin.price24hPcnt >= 0 ? '#34d399' : '#f87171',
+                }}>
+                  {coin.price24hPcnt > 0 ? '+' : ''}{coin.price24hPcnt.toFixed(2)}%
+                </div>
+                <div style={{
+                  fontSize: '0.8rem',
+                  color: 'var(--accent)',
+                  marginTop: '8px',
+                  fontWeight: '600',
+                }}>
+                  Score: {coin.score.toFixed(1)}/100
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ color: 'var(--muted)' }}>No strong recommendations detected yet. Analyzing market...</p>
+        )}
+      </section>
 
       {!loading && <StrategyCards coins={topCoins} onSelectCoin={setSelectedCoin} />}
 
@@ -192,7 +308,7 @@ function App() {
       </section>
 
       {loading ? (
-        <div className="loading">Loading Bybit market data...</div>
+        <div className="loading">🔄 Analyzing live market data...</div>
       ) : (
         <>
           <CoinTable coins={paginated.data} onSelectCoin={setSelectedCoin} />
